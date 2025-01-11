@@ -15,7 +15,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
 app.use(cors({
-   origin:"http://localhost:5173",
+   origin:"https://auth-frontend-6qma.onrender.com",
    credentials: true
 }))
 // app.use(bodyParser.urlencoded({extended:true}))
