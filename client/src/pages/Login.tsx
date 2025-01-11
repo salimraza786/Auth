@@ -37,7 +37,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://auth-backend-q0zr.onrender.com",
+        "https://auth-backend-q0zr.onrender.com/api/v1/user/login",
         user, // Sending user object in the request body
         {
           withCredentials: true,
