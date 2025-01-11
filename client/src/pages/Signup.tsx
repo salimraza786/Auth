@@ -12,90 +12,117 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"
+import axios from "axios";
 import toast from "react-hot-toast";
 
 const Signup = () => {
   type User = {
-    username : string
-    email : string 
-    password : string
-  }
-  const[user , setUser] = useState<User>({
-     username: "",
-     email: "",
-     password: ""
-  })
+    username: string;
+    email: string;
+    password: string;
+  };
+
+  const [user, setUser] = useState<User>({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-     const {name , value} = e.target 
-     setUser({...user, [name]: value})
-  }
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
+  };
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/v1/user/register',
+        "https://auth-backend-q0zr.onrender.com",
         user, // Sending user object in the request body
         {
           withCredentials: true,
-          headers: { 'Content-Type': 'application/json' },
+          headers: { "Content-Type": "application/json" },
         }
       );
-      console.log('Response:', response);
-      if(response.data.message){
-        navigate("/login")
-        toast.success(response.data.message)
+      console.log("Response:", response);
+      if (response.data.message) {
+        navigate("/login");
+        toast.success(response.data.message);
       }
     } catch (error) {
-      toast.error(error.response.data.message);
+      if (axios.isAxiosError(error) && error.response) {
+        // Safely handle Axios-specific errors
+        toast.error(error.response.data.message);
+      } else {
+        // Handle unknown errors
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
+
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-[450px] ">
-      <form onSubmit={handleSubmit}>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>Signup</CardTitle>
-            <Link to="/"><IoMdArrowRoundBack size={20} className="hover:bg-slate-300 rounded-full"/></Link>
-          </div>
-          <CardDescription>Welcome to our signup page.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Card className="w-[450px]">
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>Signup</CardTitle>
+              <Link to="/">
+                <IoMdArrowRoundBack
+                  size={20}
+                  className="hover:bg-slate-300 rounded-full"
+                />
+              </Link>
+            </div>
+            <CardDescription>Welcome to our signup page.</CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="text">Username</Label>
-                <Input 
-                 name="username"
-                 value={user.username}
-                 onChange={handleChange}
-                 id="text" placeholder="Enter Your Name" />
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  type="text" // Added type attribute
+                  name="username"
+                  value={user.username}
+                  onChange={handleChange}
+                  id="username"
+                  placeholder="Enter Your Name"
+                  required
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="email">Email</Label>
-                <Input 
+                <Input
+                  type="email" // Added type attribute
                   name="email"
                   value={user.email}
                   onChange={handleChange}
-                id="email" placeholder="Enter Your Email" />
+                  id="email"
+                  placeholder="Enter Your Email"
+                  required
+                />
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="password">Password</Label>
-                <Input 
+                <Input
+                  type="password" // Added type attribute
                   name="password"
                   value={user.password}
                   onChange={handleChange}
-                id="password" placeholder="Enter Password" />
+                  id="password"
+                  placeholder="Enter Password"
+                  required
+                />
               </div>
             </div>
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <Button className="w-full">Signup</Button>
-        </CardFooter>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <Button type="submit" className="w-full"> {/* Added type="submit" */}
+              Signup
+            </Button>
+          </CardFooter>
         </form>
       </Card>
     </div>
